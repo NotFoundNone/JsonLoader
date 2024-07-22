@@ -11,12 +11,12 @@ JsonLoader/
 │   ├── data_YYYY-MM-DD.json
 │   └── data_YYYY-MM-DD.json
 │
-├── config.py
+├── db_config.py
 ├── db_operations.py
 ├── file_operations.py
 ├── main.py
-├── settings.py
-├── utils.py
+├── process.py
+├── requirements.txt
 └── local.env
 ```
 
