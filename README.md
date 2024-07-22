@@ -7,7 +7,7 @@ JsonLoader is a project designed to load JSON data into a PostgreSQL database. T
 ```
 JsonLoader/
 │
-├── data/
+├── files/
 │   ├── data_YYYY-MM-DD.json
 │   └── data_YYYY-MM-DD.json
 │
