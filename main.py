@@ -1,8 +1,11 @@
 from datetime import datetime, timedelta
 import db_operations
 import process
+from utils import setup_logging
 
 def main():
+    setup_logging()
+
     conn = db_operations.connect_db()
     cur = conn.cursor()
 
@@ -12,13 +15,13 @@ def main():
     last_loaded_date = db_operations.get_last_loaded_date(cur)
 
     if last_loaded_date is None:
-        # Если данные еще не были загружены, начнём с 2023-01-01.
+        # Если данные еще не были загружены, начинаем с 2023-01-01.
         start_date = datetime.strptime('2023-01-01', '%Y-%m-%d').date()
     else:
         # Начало с дня, следующего за последней загруженной датой.
         start_date = last_loaded_date + timedelta(days=1)
 
-    # Загрузите данные за каждый день, начиная с даты начала и до сегодняшнего дня.
+    # Загрузка данных за каждый день, начиная с даты начала и до сегодняшнего дня.
     end_date = datetime.today().date()
     current_date = start_date
 
