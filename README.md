@@ -61,7 +61,6 @@ CREATE SEQUENCE id_sequence
 START WITH 1
 INCREMENT BY 1;
 
--- Таблица для планов
 CREATE TABLE plans (
     id INT8 default nextval('id_sequence') PRIMARY KEY,
     id_plan INT8 NOT NULL UNIQUE,
@@ -74,7 +73,6 @@ CREATE TABLE plans (
     ont_time_write TIMESTAMP
 );
 
--- Таблица для поездов
 CREATE TABLE trains (
     id INT8 default nextval('id_sequence') PRIMARY KEY,
     id_plan INT8 NOT NULL,
