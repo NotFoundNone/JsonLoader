@@ -18,32 +18,32 @@ def connect_db():
 
 def create_tables(cur):
     cur.execute("""
-        CREATE TABLE IF NOT EXISTS load_log (
+        CREATE TABLE IF NOT EXISTS ssp_load_log (
             date DATE PRIMARY KEY
         );
     """)
 
 def get_last_loaded_date(cur):
     cur.execute("""
-        SELECT MAX(date) FROM load_log;
+        SELECT MAX(date) FROM ssp_load_log;
     """)
     return cur.fetchone()[0]
 
 def log_load(cur, date):
     cur.execute("""
-        INSERT INTO load_log (date) VALUES (%s);
+        INSERT INTO ssp_load_log (date) VALUES (%s);
     """, (date,))
 
 def update_or_insert_plan(cur, plan):
     try:
         cur.execute("""
-            SELECT * FROM plans WHERE id_plan = %s;
+            SELECT * FROM ssp_plans WHERE id_plan = %s;
         """, (plan['id_plan'],))
         existing_plan = cur.fetchone()
 
         if existing_plan:
             cur.execute("""
-                UPDATE plans SET 
+                UPDATE ssp_plans SET 
                     plan_num = %s,
                     plan_type = %s,
                     plan_date = %s,
@@ -65,7 +65,7 @@ def update_or_insert_plan(cur, plan):
             logger.info(f"Updated plan record. Data: {plan}")
         else:
             cur.execute("""
-                INSERT INTO plans (id_plan, plan_num, plan_type, plan_date, plan_name, plan_time, train_count, ont_time_write)
+                INSERT INTO ssp_plans (id_plan, plan_num, plan_type, plan_date, plan_name, plan_time, train_count, ont_time_write)
                 VALUES (%s, %s, %s, %s, %s, %s, %s, %s);
             """, (
                 plan['id_plan'],
@@ -85,13 +85,13 @@ def update_or_insert_plan(cur, plan):
 def update_or_insert_train(cur, train):
     try:
         cur.execute("""
-            SELECT * FROM trains WHERE id_plan = %s AND train = %s AND num = %s;
+            SELECT * FROM ssp_trains WHERE id_plan = %s AND train = %s AND num = %s;
         """, (train['id_plan'], train['train'], train['num']))
         existing_train = cur.fetchone()
 
         if existing_train:
             cur.execute("""
-                UPDATE trains SET
+                UPDATE ssp_trains SET
                     index_poezd = %s,
                     st_fr = %s,
                     st_nz = %s,
@@ -151,7 +151,7 @@ def update_or_insert_train(cur, train):
             logger.info(f"Updated train record. Data: {train}")
         else:
             cur.execute("""
-                INSERT INTO trains (id_plan, train, num, index_poezd, st_fr, st_nz, date_op, st_poslop, code_poslop, date_poslop,
+                INSERT INTO ssp_trains (id_plan, train, num, index_poezd, st_fr, st_nz, date_op, st_poslop, code_poslop, date_poslop,
                                     mass, usl_dl, kol_vag, gr_vsego, gr_kr, gr_pl, gr_pv, gr_cs, gr_pr, por_vsego, por_kr, por_pl,
                                     por_pv, por_pvzs, por_pvzsfgk, por_cs, por_pr, ont_time_write)
                 VALUES (%s ,%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);
@@ -193,13 +193,13 @@ def update_or_insert_train(cur, train):
 def update_or_insert_rasp(cur, rasp):
     try:
         cur.execute("""
-            SELECT * FROM rasp WHERE id_plan = %s AND train = %s AND esr6 = %s AND dor_sdach = %s AND reg_sdach = %s;
+            SELECT * FROM ssp_rasp WHERE id_plan = %s AND train = %s AND esr6 = %s AND dor_sdach = %s AND reg_sdach = %s;
         """, (rasp['id_plan'], rasp['train'], rasp.get('esr6'), rasp.get('dor_sdach'), rasp.get('reg_sdach')))
         existing_rasp = cur.fetchone()
 
         if existing_rasp:
             cur.execute("""
-                UPDATE rasp SET 
+                UPDATE ssp_rasp SET 
                     date_prib = %s,
                     date_otpr = %s,
                     ont_time_write = %s
@@ -217,7 +217,7 @@ def update_or_insert_rasp(cur, rasp):
             logger.info(f"Updated rasp record. Data: {rasp}")
         else:
             cur.execute("""
-                INSERT INTO rasp (id_plan, train, esr6, dor_sdach, reg_sdach, date_prib, date_otpr, ont_time_write)
+                INSERT INTO ssp_rasp (id_plan, train, esr6, dor_sdach, reg_sdach, date_prib, date_otpr, ont_time_write)
                 VALUES (%s, %s, %s, %s, %s, %s, %s, %s);
             """, (
                 rasp['id_plan'],
@@ -232,3 +232,4 @@ def update_or_insert_rasp(cur, rasp):
             logger.info(f"Inserted new rasp record. Data: {rasp}")
     except Exception as e:
         logger.error(f"Error when processing rasp: {e}, Data: {rasp}")
+
